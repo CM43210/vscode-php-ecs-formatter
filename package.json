@@ -1,0 +1,127 @@
+{
+  "name": "php-ecs-formatter",
+  "displayName": "PHP ECS Formatter",
+  "description": "Format, fix, and compare your PHP code using Easy Coding Standard (ECS) directly in Visual Studio Code",
+  "version": "0.2.0",
+  "author": {
+    "name": "Cezary Marcinik",
+    "email": "cezary.marcinik@o2.pl"
+  },
+  "publisher": "CezaryMarcinik",
+  "license": "MIT",
+  "homepage": "https://github.com/CM43210/vscode-php-ecs-formatter",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CM43210/vscode-php-ecs-formatter"
+  },
+  "bugs": {
+    "url": "https://github.com/CM43210/vscode-php-ecs-formatter/issues"
+  },
+  "galleryBanner": {
+    "color": "#1A1A1A",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Formatters",
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "php",
+    "ecs",
+    "formatter",
+    "easy coding standard",
+    "coding standard",
+    "linter",
+    "php ecs",
+    "php ecs formatter"
+  ],
+  "activationEvents": [
+    "onLanguage:php"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "php-ecs-formatter.fixFile",
+        "title": "php-ecs-formatter: fix this file"
+      },
+      {
+        "command": "php-ecs-formatter.showDiff",
+        "title": "php-ecs-formatter: diff"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "php-ecs-formatter.fixFile",
+          "when": "resourceLangId == php",
+          "group": "navigation"
+        },
+        {
+          "command": "php-ecs-formatter.showDiff",
+          "when": "resourceLangId == php",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "PHP ECS Formatter",
+      "properties": {
+        "php-ecs-formatter.executablePath": {
+          "type": "string",
+          "default": "",
+          "description": "The path to the ECS executable file. Can be an absolute path or relative to the working folder. If not set, the default path './vendor/bin/ecs' will be used."
+        },
+        "php-ecs-formatter.configPath": {
+          "type": "string",
+          "default": "",
+          "description": "The path to the ECS configuration file. Can be a relative or absolute path. If not set, the default path './ecs.php' will be used."
+        },
+        "php-ecs-formatter.onsave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatic formatting of PHP files when saving."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "test:integration": "npm run compile:test && vscode-test --label integration",
+    "test:unit": "npm run compile:test && vscode-test --label unit",
+    "compile:test": "tsc -p . --outDir out"
+  },
+  "devDependencies": {
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/sinon": "^17.0.3",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "chai": "^5.1.2",
+    "eslint": "^9.13.0",
+    "mocha": "^11.0.1",
+    "sinon": "^19.0.2",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
