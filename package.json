@@ -100,6 +100,7 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
+    "test:no-sandbox": "vscode-test --no-sandbox",
     "test:integration": "npm run compile:test && vscode-test --label integration",
     "test:unit": "npm run compile:test && vscode-test --label unit",
     "compile:test": "tsc -p . --outDir out"
