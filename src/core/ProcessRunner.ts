@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import { dirname } from "path";
 
 export interface ProcessRunner {
   runEcsCheck(
@@ -23,7 +24,7 @@ export class DefaultProcessRunner implements ProcessRunner {
         `--config=${configPath}`,
         "--no-progress-bar",
         "--quiet",
-      ]);
+      ], { cwd: dirname(configPath) });
 
       let stderrData = "";
 
