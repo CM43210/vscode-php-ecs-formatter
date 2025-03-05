@@ -16,7 +16,8 @@ export class EcsCommandRunner {
       await this.processRunner.runEcsCheck(
         this.ecsConfig.ecsPath,
         this.ecsConfig.configPath,
-        tempFilePath
+        tempFilePath,
+        this.ecsConfig.workspaceRoot
       );
       const newContent = await this.fileHandler.readTempFile(tempFilePath);
       return newContent;
@@ -29,7 +30,8 @@ export class EcsCommandRunner {
     await this.processRunner.runEcsCheck(
       this.ecsConfig.ecsPath,
       this.ecsConfig.configPath,
-      filePath
+      filePath,
+      this.ecsConfig.workspaceRoot
     );
   }
 }
