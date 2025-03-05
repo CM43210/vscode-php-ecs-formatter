@@ -26,12 +26,16 @@ export class DefaultProcessRunner implements ProcessRunner {
           "--fix",
           `--config=${configPath}`,
           "--no-progress-bar",
-          "--quiet",
         ],
         { cwd: workspaceRoot }
       );
 
+      let stdoutData = "";
       let stderrData = "";
+
+      processHandle.stdout.on("data", (data) => {
+        stdoutData += data.toString();
+      });
 
       processHandle.stderr.on("data", (data) => {
         stderrData += data.toString();
@@ -45,7 +49,13 @@ export class DefaultProcessRunner implements ProcessRunner {
         if (code === 0) {
           resolve();
         } else {
-          reject(new Error(`ECS exited with code ${code}\n${stderrData}`));
+          reject(
+            new Error(
+              `ECS exited with code ${code}\n` +
+                `STDERR:\n${stderrData}\n` +
+                `STDOUT:\n${stdoutData}`
+            )
+          );
         }
       });
     });

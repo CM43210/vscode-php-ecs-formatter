@@ -2,7 +2,7 @@
   "name": "php-ecs-formatter",
   "displayName": "PHP ECS Formatter",
   "description": "Format, fix, and compare your PHP code using Easy Coding Standard (ECS) directly in Visual Studio Code",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "Cezary Marcinik",
     "email": "cezary.marcinik@o2.pl"

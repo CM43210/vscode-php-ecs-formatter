@@ -47,7 +47,6 @@ suite("DefaultProcessRunner", () => {
         "--fix",
         "--config=/path/to/ecs.php",
         "--no-progress-bar",
-        "--quiet",
       ],
       "Should pass correct arguments to ECS"
     );
@@ -88,13 +87,17 @@ suite("DefaultProcessRunner", () => {
     };
     spawnStub.returns(fakeChildProcess);
 
-    fakeChildProcess.on.withArgs("close").yields(1);
-
+    fakeChildProcess.stdout.on
+      .withArgs("data")
+      .callsArgWith(1, Buffer.from("Some ECS output"));
     fakeChildProcess.stderr.on
       .withArgs("data")
-      .callsArgWith(1, "Some ECS error");
+      .callsArgWith(1, Buffer.from("Some ECS error"));
+
+    fakeChildProcess.on.withArgs("close").yields(1);
 
     const runner = new DefaultProcessRunner();
+
     await assert.rejects(
       runner.runEcsCheck(
         "/path/to/ecs",
@@ -102,7 +105,7 @@ suite("DefaultProcessRunner", () => {
         "file.php",
         "/my/ws"
       ),
-      /ECS exited with code 1\nSome ECS error/
+      /ECS exited with code 1\nSTDERR:\nSome ECS error\nSTDOUT:\nSome ECS output/
     );
   });
 
