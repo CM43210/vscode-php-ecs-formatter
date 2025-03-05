@@ -1,11 +1,11 @@
 import { spawn } from "child_process";
-import { dirname } from "path";
 
 export interface ProcessRunner {
   runEcsCheck(
     ecsPath: string,
     configPath: string,
-    targetPath: string
+    targetPath: string,
+    workspaceRoot: string
   ): Promise<void>;
 }
 
@@ -13,30 +13,35 @@ export class DefaultProcessRunner implements ProcessRunner {
   runEcsCheck(
     ecsPath: string,
     configPath: string,
-    targetPath: string
+    targetPath: string,
+    workspaceRoot: string
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const process = spawn("php", [
-        ecsPath,
-        "check",
-        targetPath,
-        "--fix",
-        `--config=${configPath}`,
-        "--no-progress-bar",
-        "--quiet",
-      ], { cwd: dirname(configPath) });
+      const processHandle = spawn(
+        "php",
+        [
+          ecsPath,
+          "check",
+          targetPath,
+          "--fix",
+          `--config=${configPath}`,
+          "--no-progress-bar",
+          "--quiet",
+        ],
+        { cwd: workspaceRoot }
+      );
 
       let stderrData = "";
 
-      process.stderr.on("data", (data) => {
+      processHandle.stderr.on("data", (data) => {
         stderrData += data.toString();
       });
 
-      process.on("error", (err) => {
+      processHandle.on("error", (err) => {
         reject(err);
       });
 
-      process.on("close", (code) => {
+      processHandle.on("close", (code) => {
         if (code === 0) {
           resolve();
         } else {

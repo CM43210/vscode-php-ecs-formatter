@@ -5,6 +5,7 @@ export interface EcsConfig {
   ecsPath: string;
   configPath: string;
   onSave: boolean;
+  workspaceRoot: string;
 }
 
 export class ConfigLoader {
@@ -14,9 +15,12 @@ export class ConfigLoader {
 
     const ecsPath = ConfigLoader.resolveEcsPath(workspaceFolder, config);
     const configPath = ConfigLoader.resolveConfigPath(workspaceFolder, config);
+
     const onSave = config.get<boolean>("onsave", false);
 
-    return { ecsPath, configPath, onSave };
+    const workspaceRoot = workspaceFolder;
+
+    return { ecsPath, configPath, onSave, workspaceRoot };
   }
 
   public static loadConfigForFile(resource: vscode.Uri): EcsConfig {
@@ -27,7 +31,9 @@ export class ConfigLoader {
     const configPath = ConfigLoader.resolveConfigPath(workspaceFolder, config);
     const onSave = config.get<boolean>("onsave", false);
 
-    return { ecsPath, configPath, onSave };
+    const workspaceRoot = workspaceFolder;
+
+    return { ecsPath, configPath, onSave, workspaceRoot };
   }
 
   private static resolvePath(
@@ -44,7 +50,6 @@ export class ConfigLoader {
     } else {
       filePath = path.join(workspaceFolder, defaultRelativePath);
     }
-
     return filePath;
   }
 
@@ -84,11 +89,11 @@ export class ConfigLoader {
 
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor) {
-      const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+      const folder = vscode.workspace.getWorkspaceFolder(
         activeEditor.document.uri
       );
-      if (workspaceFolder) {
-        return workspaceFolder.uri.fsPath;
+      if (folder) {
+        return folder.uri.fsPath;
       }
     }
 
@@ -96,12 +101,11 @@ export class ConfigLoader {
   }
 
   private static getWorkspaceFolderForFile(resource: vscode.Uri): string {
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(resource);
-    if (workspaceFolder) {
-      return workspaceFolder.uri.fsPath;
-    } else {
+    const folder = vscode.workspace.getWorkspaceFolder(resource);
+    if (!folder) {
       vscode.window.showErrorMessage("Workspace folder not found");
       throw new Error("Workspace folder not found");
     }
+    return folder.uri.fsPath;
   }
 }

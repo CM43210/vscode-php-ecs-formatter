@@ -24,6 +24,7 @@ suite("EcsCommandRunner", () => {
       ecsPath: "/path/to/ecs",
       configPath: "/path/to/ecs.php",
       onSave: false,
+      workspaceRoot: "./",
     };
 
     tempFileProviderMock = sinon.createStubInstance(DefaultTempFileProvider);
